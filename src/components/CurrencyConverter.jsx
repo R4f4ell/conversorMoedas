@@ -31,41 +31,66 @@ const CurrencyConverter = () => {
   }
 
   return (
-    <div className="converter">
-      <h2>Conversor de Moedas</h2>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <span>Selecione as moedas:</span>
-      <select
-        value={fromCurrency}
-        onChange={(e) => setFromCurrency(e.target.value)}
-      >
-        {Object.keys(rates).map((currency) => (
-          <option key={currency} value={currency}>
-            {currency}
-          </option>
-        ))}
-      </select>
-      <span> para </span>
-      <select
-        value={toCurrency}
-        onChange={(e) => setToCurrency(e.target.value)}
-      >
-        {Object.keys(rates).map((currency) => (
-          <option key={currency} value={currency}>
-            {currency}
-          </option>
-        ))}
-      </select>
-      <h3>
-        {convertedAmount} {toCurrency}
-      </h3>
-      <p>
-        {amount} {fromCurrency} valem {convertedAmount} {toCurrency}
-      </p>
+    <div className="converter-wrapper">
+      <picture className="background-image">
+        <source 
+          media="(max-width: 480px)" 
+          srcSet="./src/assets/currencyConverter/mobile/bgImageCurrencyConverter-mobile.webp"
+          type="image/webp"
+        />
+        <source 
+          media="(min-width: 481px) and (max-width: 1024px)" 
+          srcSet="./src/assets/currencyConverter/tablet/bgImageCurrencyConverter-tablet.webp"
+          type="image/webp"
+        />
+        <source 
+          media="(min-width: 1025px)" 
+          srcSet="./src/assets/currencyConverter/desktop/bgImageCurrencyConverter-desktop.webp"
+          type="image/webp"
+        />
+        <img 
+          src="./src/assets/currencyConverter/desktop/bgImageCurrencyConverter-desktop.webp"
+          alt="Currency Converter Background"
+          className="bg-image"
+        />
+      </picture>
+      
+      <div className="converter">
+        <h2>Conversor de Moedas</h2>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <span>Selecione as moedas:</span>
+        <select
+          value={fromCurrency}
+          onChange={(e) => setFromCurrency(e.target.value)}
+        >
+          {Object.keys(rates).map((currency) => (
+            <option key={currency} value={currency}>
+              {currency}
+            </option>
+          ))}
+        </select>
+        <span> para </span>
+        <select
+          value={toCurrency}
+          onChange={(e) => setToCurrency(e.target.value)}
+        >
+          {Object.keys(rates).map((currency) => (
+            <option key={currency} value={currency}>
+              {currency}
+            </option>
+          ))}
+        </select>
+        <h3>
+          {convertedAmount} {toCurrency}
+        </h3>
+        <p>
+          {amount} {fromCurrency} valem {convertedAmount} {toCurrency}
+        </p>
+      </div>
     </div>
   );
 };
