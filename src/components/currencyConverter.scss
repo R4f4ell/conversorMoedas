@@ -2,11 +2,13 @@
 
 .converter-wrapper {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
 }
 
@@ -35,7 +37,7 @@
   border-radius: 24px;
   width: 100%;
   max-width: 420px;
-  margin: 1rem auto;
+  margin: 0 auto;
   background: variables.$bg-color-currencyConverter;
   backdrop-filter: blur(20px) saturate(180%);
   box-shadow: variables.$shadow-base;
@@ -43,11 +45,8 @@
   position: relative;
   z-index: 1;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: variables.$shadow-hover;
-  }
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   
   h2 {
     color: variables.$color-h2;
@@ -81,12 +80,6 @@
       background-color: variables.$bg-inputs-focus;
       box-shadow: variables.$shadow-focus;
       transform: translateY(-2px);
-    }
-    
-    &:hover {
-      border-color: variables.$border-color-hover;
-      background-color: variables.$bg-inputs-hover;
-      transform: translateY(-1px);
     }
   }
   
@@ -169,17 +162,76 @@
 // Mobile pequeno (360x800)
 @media (max-width: 375px) and (max-height: 812px) {
   .converter-wrapper {
+    padding: 0.5rem;
+    height: 100vh;
+  }
+  
+  .converter {
+    padding: 1.25rem;
+    max-width: calc(100vw - 1rem);
+    border-radius: 20px;
+    max-height: calc(100vh - 1rem);
+    
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    input, select {
+      padding: 0.75rem 0.875rem;
+      font-size: 0.875rem;
+      border-radius: 12px;
+      
+      &:active {
+        transform: scale(0.98);
+        background-color: variables.$bg-active;
+      }
+    }
+    
+    input {
+      margin-bottom: 1rem;
+      font-size: 0.9375rem;
+    }
+    
+    select {
+      margin: 0.5rem 0;
+      padding-right: 2.5rem;
+      background-size: 10px;
+    }
+    
+    span {
+      font-size: 0.8125rem;
+      margin: 0.625rem 0 0.25rem 0;
+    }
+    
+    p {
+      font-size: 0.8125rem;
+      margin: 0.25rem 0;
+    }
+    
+    h3 {
+      font-size: 1.75rem;
+      margin: 1.25rem 0 0.625rem 0;
+    }
+    
+    p {
+      font-size: 0.8125rem;
+      padding: 0.75rem 1rem;
+    }
+  }
+}
+
+// Mobile médio (390x844, 412x1040)
+@media (min-width: 376px) and (max-width: 430px) {
+  .converter-wrapper {
     padding: 0.75rem;
+    height: 100vh;
   }
   
   .converter {
     padding: 1.5rem;
-    max-width: 340px;
-    border-radius: 20px;
-    
-    &:hover {
-      transform: translateY(-4px);
-    }
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100vh - 1.5rem);
     
     h2 {
       font-size: 1.5rem;
@@ -187,9 +239,14 @@
     }
     
     input, select {
-      padding: 0.875rem 1rem;
-      font-size: 0.9rem;
-      border-radius: 12px;
+      padding: 0.8125rem 1rem;
+      font-size: 0.9375rem;
+      border-radius: 14px;
+      
+      &:active {
+        transform: scale(0.98);
+        background-color: variables.$bg-active;
+      }
     }
     
     input {
@@ -198,19 +255,14 @@
     }
     
     select {
-      margin: 0.5rem 0;
-      padding-right: 2.5rem;
-      background-size: 10px;
-      
-      &:active {
-        transform: scale(0.98);
-        background-color: variables.$bg-active;
-      }
+      margin: 0.625rem 0;
+      padding-right: 2.75rem;
+      background-size: 11px;
     }
     
     span {
       font-size: 0.875rem;
-      margin: 0.75rem 0 0.25rem 0;
+      margin: 0.75rem 0 0.375rem 0;
     }
     
     p {
@@ -227,116 +279,30 @@
       font-size: 0.875rem;
       padding: 0.875rem 1.25rem;
     }
-    
-    input:active {
-      transform: scale(0.98);
-      background-color: variables.$bg-active;
-    }
-  }
-}
-
-// Mobile médio (390x844, 412x1040)
-@media (min-width: 376px) and (max-width: 430px) {
-  .converter-wrapper {
-    padding: 1rem;
-  }
-  
-  .converter {
-    padding: 1.75rem;
-    max-width: 380px;
-    
-    &:hover {
-      transform: translateY(-6px);
-    }
-    
-    h2 {
-      font-size: 1.625rem;
-      margin-bottom: 1.75rem;
-    }
-    
-    input, select {
-      padding: 0.9375rem 1.125rem;
-      font-size: 0.9375rem;
-      border-radius: 14px;
-    }
-    
-    input {
-      margin-bottom: 1.375rem;
-      font-size: 1.0625rem;
-    }
-    
-    select {
-      margin: 0.625rem 0;
-      padding-right: 2.75rem;
-      background-size: 11px;
-      
-      &:active {
-        transform: scale(0.98);
-        background-color: variables.$bg-active;
-      }
-    }
-    
-    span {
-      font-size: 0.9375rem;
-      margin: 0.875rem 0 0.375rem 0;
-    }
-    
-    p {
-      font-size: 0.9375rem;
-      margin: 0.4375rem 0;
-    }
-    
-    h3 {
-      font-size: 2rem;
-      margin: 1.75rem 0 0.875rem 0;
-    }
-    
-    p {
-      font-size: 0.9375rem;
-      padding: 0.9375rem 1.375rem;
-    }
-    
-    input:active {
-      transform: scale(0.98);
-      background-color: variables.$bg-active;
-    }
   }
 }
 
 // Tablet (768x1024, 800x1280)
 @media (min-width: 431px) and (max-width: 850px) {
   .converter-wrapper {
-    padding: 1.5rem;
+    padding: 1rem;
+    height: 100vh;
   }
   
   .converter {
-    padding: 2.5rem;
+    padding: 2rem;
     max-width: 480px;
-    
-    &:hover {
-      transform: translateY(-10px);
-    }
+    max-height: calc(100vh - 2rem);
     
     h2 {
-      font-size: 2rem;
-      margin-bottom: 2.5rem;
+      font-size: 1.75rem;
+      margin-bottom: 2rem;
     }
     
     input, select {
-      padding: 1.125rem 1.375rem;
-      font-size: 1.125rem;
+      padding: 1rem 1.25rem;
+      font-size: 1.0625rem;
       border-radius: 18px;
-    }
-    
-    input {
-      margin-bottom: 2rem;
-      font-size: 1.25rem;
-    }
-    
-    select {
-      margin: 0.875rem 0;
-      padding-right: 3.25rem;
-      background-size: 14px;
       
       &:active {
         transform: scale(0.98);
@@ -344,29 +310,35 @@
       }
     }
     
-    span {
+    input {
+      margin-bottom: 1.75rem;
       font-size: 1.125rem;
-      margin: 1.25rem 0 0.75rem 0;
+    }
+    
+    select {
+      margin: 0.75rem 0;
+      padding-right: 3.25rem;
+      background-size: 14px;
+    }
+    
+    span {
+      font-size: 1rem;
+      margin: 1rem 0 0.5rem 0;
     }
     
     p {
-      font-size: 1.125rem;
-      margin: 0.75rem 0;
+      font-size: 1rem;
+      margin: 0.5rem 0;
     }
     
     h3 {
-      font-size: 2.75rem;
-      margin: 2.5rem 0 1.25rem 0;
+      font-size: 2.25rem;
+      margin: 2rem 0 1rem 0;
     }
     
     p {
-      font-size: 1.125rem;
-      padding: 1.25rem 1.75rem;
-    }
-    
-    input:active {
-      transform: scale(0.98);
-      background-color: variables.$bg-active;
+      font-size: 1rem;
+      padding: 1rem 1.5rem;
     }
   }
 }
@@ -374,71 +346,68 @@
 // Desktop pequeno (1366x720)
 @media (min-width: 851px) and (max-width: 1400px) {
   .converter-wrapper {
-    padding: 2rem;
+    padding: 1.5rem;
+    height: 100vh;
   }
   
   .converter {
-    padding: 3rem;
+    padding: 1.75rem;
     max-width: 520px;
-    margin: 2rem auto;
-    
-    &:hover {
-      transform: translateY(-12px);
-      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2);
-    }
+    max-height: calc(100vh - 3rem);
     
     h2 {
-      font-size: 2.25rem;
-      margin-bottom: 3rem;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
     }
     
     input, select {
-      padding: 1.25rem 1.5rem;
-      font-size: 1.25rem;
+      padding: 0.875rem 1.125rem;
+      font-size: 1.125rem;
       border-radius: 20px;
       
       &:hover {
         border-color: variables.$border-color-hover;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        background-color: variables.$bg-inputs-hover;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
       }
       
       &:focus {
-        transform: translateY(-4px);
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 12px 35px rgba(59, 130, 246, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 6px 20px rgba(59, 130, 246, 0.2);
       }
     }
     
     input {
-      margin-bottom: 2.25rem;
-      font-size: 1.375rem;
+      margin-bottom: 1.25rem;
+      font-size: 1.25rem;
     }
     
     select {
-      margin: 1rem 0;
+      margin: 0.5rem 0;
       cursor: pointer;
       padding-right: 3.5rem;
       background-size: 16px;
     }
     
     span {
-      font-size: 1.25rem;
-      margin: 1.5rem 0 1rem 0;
+      font-size: 1.125rem;
+      margin: 0.75rem 0 0.25rem 0;
     }
     
     p {
-      font-size: 1.25rem;
-      margin: 0.875rem 0;
+      font-size: 1.125rem;
+      margin: 0.25rem 0;
     }
     
     h3 {
-      font-size: 3.25rem;
-      margin: 3rem 0 1.5rem 0;
+      font-size: 2.5rem;
+      margin: 1.5rem 0 0.75rem 0;
     }
     
     p {
-      font-size: 1.25rem;
-      padding: 1.5rem 2rem;
+      font-size: 1.125rem;
+      padding: 1rem 1.5rem;
     }
   }
 }
@@ -446,71 +415,68 @@
 // Desktop grande (1440x846, 1920x832)
 @media (min-width: 1401px) {
   .converter-wrapper {
-    padding: 2.5rem;
+    padding: 2rem;
+    height: 100vh;
   }
   
   .converter {
-    padding: 3.5rem;
+    padding: 2rem;
     max-width: 580px;
-    margin: 2.5rem auto;
-    
-    &:hover {
-      transform: translateY(-15px);
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.25);
-    }
+    max-height: calc(100vh - 4rem);
     
     h2 {
-      font-size: 2.5rem;
-      margin-bottom: 3.5rem;
+      font-size: 2.25rem;
+      margin-bottom: 1.75rem;
     }
     
     input, select {
-      padding: 1.375rem 1.75rem;
-      font-size: 1.375rem;
+      padding: 1rem 1.25rem;
+      font-size: 1.25rem;
       border-radius: 22px;
       
       &:hover {
         border-color: variables.$border-color-hover;
-        transform: translateY(-4px);
-        box-shadow: 0 12px 35px rgba(59, 130, 246, 0.2);
+        background-color: variables.$bg-inputs-hover;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.2);
       }
       
       &:focus {
-        transform: translateY(-5px);
-        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 16px 45px rgba(59, 130, 246, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), 0 8px 25px rgba(59, 130, 246, 0.25);
       }
     }
     
     input {
-      margin-bottom: 2.5rem;
-      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.375rem;
     }
     
     select {
-      margin: 1.25rem 0;
+      margin: 0.625rem 0;
       cursor: pointer;
       padding-right: 4rem;
       background-size: 18px;
     }
     
     span {
-      font-size: 1.375rem;
-      margin: 1.75rem 0 1.25rem 0;
+      font-size: 1.25rem;
+      margin: 1rem 0 0.5rem 0;
     }
     
     p {
-      font-size: 1.375rem;
-      margin: 1rem 0;
+      font-size: 1.25rem;
+      margin: 0.5rem 0;
     }
     
     h3 {
-      font-size: 3.75rem;
-      margin: 3.5rem 0 1.75rem 0;
+      font-size: 2.75rem;
+      margin: 1.75rem 0 1rem 0;
     }
     
     p {
-      font-size: 1.375rem;
-      padding: 1.75rem 2.25rem;
+      font-size: 1.25rem;
+      padding: 1.25rem 1.75rem;
     }
   }
 }
