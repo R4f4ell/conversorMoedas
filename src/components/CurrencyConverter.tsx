@@ -17,6 +17,7 @@ const CurrencyConverter = () => {
   const [toCurrency, setToCurrency] = useState("EUR");
   const [amount, setAmount] = useState<number | "">(1);
   const [convertedAmount, setConvertedAmount] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     axios.get<ExchangeRateResponse>("https://v6.exchangerate-api.com/v6/1ec9950e8b454da1ea047f17/latest/USD")
@@ -24,16 +25,32 @@ const CurrencyConverter = () => {
         setRates(response.data.conversion_rates);
       }).catch((error) => {
         console.log("Erro ao obter dados da API", error);
+        setError("Erro ao obter dados da API");
       });
   }, []);
 
   useEffect(() => {
+    if (amount === "") {
+      setConvertedAmount(null);
+      return;
+    }
+
     if (rates) {
       const rateFrom = rates[fromCurrency] || 0;
       const rateTo = rates[toCurrency] || 0;
+
+      if (!rateFrom || !rateTo) {
+        setConvertedAmount(null);
+        return;
+      }
+
       setConvertedAmount(((Number(amount) / rateFrom) * rateTo).toFixed(2));
     }
   }, [amount, rates, fromCurrency, toCurrency]);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!rates) {
     return <div>Carregando...</div>;
@@ -94,10 +111,10 @@ const CurrencyConverter = () => {
           ))}
         </select>
         <h3>
-          {convertedAmount} {toCurrency}
+          {convertedAmount ?? "--"} {toCurrency}
         </h3>
         <p>
-          {amount} {fromCurrency} valem {convertedAmount} {toCurrency}
+          {amount || "--"} {fromCurrency} valem {convertedAmount ?? "--"} {toCurrency}
         </p>
       </div>
     </div>
