@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import './currencyConverter.scss';
 import mobileBg from '../assets/currencyConverter/mobile/bgImageCurrencyConverter-mobile.webp';
@@ -45,7 +45,6 @@ const CurrencyConverter = () => {
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
   const [amount, setAmount] = useState("1");
-  const [convertedAmount, setConvertedAmount] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const numericAmount = getNumericAmount(amount);
   const isAmountEmpty = amount === "";
@@ -70,10 +69,9 @@ const CurrencyConverter = () => {
       });
   }, []);
 
-  useEffect(() => {
+  const convertedAmount = useMemo(() => {
     if (numericAmount === null) {
-      setConvertedAmount(null);
-      return;
+      return null;
     }
 
     if (rates) {
@@ -81,13 +79,14 @@ const CurrencyConverter = () => {
       const rateTo = rates[toCurrency] || 0;
 
       if (!rateFrom || !rateTo) {
-        setConvertedAmount(null);
-        return;
+        return null;
       }
 
-      setConvertedAmount(((numericAmount / rateFrom) * rateTo).toFixed(2));
+      return ((numericAmount / rateFrom) * rateTo).toFixed(2);
     }
-  }, [amount, rates, fromCurrency, toCurrency]);
+
+    return null;
+  }, [numericAmount, rates, fromCurrency, toCurrency]);
 
   if (error) {
     return <div>{error}</div>;
