@@ -11,6 +11,11 @@ type ExchangeRateResponse = {
   conversion_rates: ConversionRates;
 };
 
+const EXCHANGE_RATE_API_BASE_URL = import.meta.env.VITE_EXCHANGE_RATE_API_BASE_URL;
+const EXCHANGE_RATE_API_KEY = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
+const EXCHANGE_RATE_BASE_CURRENCY = import.meta.env.VITE_EXCHANGE_RATE_BASE_CURRENCY ?? "USD";
+const EXCHANGE_RATE_API_URL = `${EXCHANGE_RATE_API_BASE_URL}/${EXCHANGE_RATE_API_KEY}/latest/${EXCHANGE_RATE_BASE_CURRENCY}`;
+
 const CurrencyConverter = () => {
   const [rates, setRates] = useState<ConversionRates | null>(null);
   const [fromCurrency, setFromCurrency] = useState("USD");
@@ -20,7 +25,12 @@ const CurrencyConverter = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios.get<ExchangeRateResponse>("https://v6.exchangerate-api.com/v6/1ec9950e8b454da1ea047f17/latest/USD")
+    if (!EXCHANGE_RATE_API_BASE_URL || !EXCHANGE_RATE_API_KEY) {
+      setError("Configuracao da API de cambio ausente");
+      return;
+    }
+
+    axios.get<ExchangeRateResponse>(EXCHANGE_RATE_API_URL)
       .then((response) => {
         setRates(response.data.conversion_rates);
       }).catch((error) => {
