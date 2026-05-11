@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, type FocusEvent } from "react";
 import axios from "axios";
 import './currencyConverter.scss';
+import { getCurrencyDisplayName } from "../utils/currencyDisplay";
 
 type ConversionRates = Record<string, number>;
 
@@ -78,7 +79,8 @@ const CurrencySelect = ({
             role="option"
             onClick={() => onChange(currency)}
           >
-            {currency}
+            <span className="currency-select__code">{currency}</span>
+            <span className="currency-select__name">{getCurrencyDisplayName(currency)}</span>
           </button>
         ))}
       </div>
