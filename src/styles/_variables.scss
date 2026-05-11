@@ -1,20 +1,20 @@
-$bg-color-currencyConverter: rgba(255, 255, 255, 0.95);
+$bg-color-currencyConverter: rgba(17, 16, 14, 0.88);
 
-$bg-inputs: #ffffff;
-$bg-inputs-focus: #f8fafc;
-$bg-inputs-hover: #f1f5f9;
-$bg-active: #e2e8f0;
+$bg-inputs: rgba(231, 215, 194, 0.05);
+$bg-inputs-focus: rgba(231, 215, 194, 0.075);
+$bg-inputs-hover: rgba(231, 215, 194, 0.06);
+$bg-active: rgba(231, 215, 194, 0.08);
 
-$color-h2: #1e293b;
-$color-h3: #3b82f6;
-$color-text: #475569;
-$color-text-muted: #64748b;
-$color-span: #374151;
+$color-h2: #f1e8dc;
+$color-h3: #f3d58b;
+$color-text: #f0e6d8;
+$color-text-muted: #a89a88;
+$color-span: #b9aa96;
 
-$border-color: #e2e8f0;
-$border-color-focus: #3b82f6;
-$border-color-hover: #60a5fa;
+$border-color: rgba(232, 210, 178, 0.09);
+$border-color-focus: rgba(230, 194, 122, 0.78);
+$border-color-hover: rgba(230, 194, 122, 0.34);
 
-$shadow-base: 0 10px 40px rgba(0, 0, 0, 0.12);
-$shadow-hover: 0 20px 60px rgba(0, 0, 0, 0.15);
-$shadow-focus: 0 0 0 4px rgba(59, 130, 246, 0.1);
+$shadow-base: 0 28px 90px rgba(0, 0, 0, 0.5);
+$shadow-hover: 0 34px 100px rgba(0, 0, 0, 0.56);
+$shadow-focus: 0 0 0 3px rgba(230, 194, 122, 0.1);
