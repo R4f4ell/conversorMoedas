@@ -7,9 +7,17 @@ import desktopBg from '../assets/currencyConverter/desktop/bgImageCurrencyConver
 
 type ConversionRates = Record<string, number>;
 
-type ExchangeRateResponse = {
+type ExchangeRateSuccessResponse = {
+  result: "success";
   conversion_rates: ConversionRates;
 };
+
+type ExchangeRateErrorResponse = {
+  result: "error";
+  "error-type": string;
+};
+
+type ExchangeRateResponse = ExchangeRateSuccessResponse | ExchangeRateErrorResponse;
 
 const EXCHANGE_RATE_API_BASE_URL = import.meta.env.VITE_EXCHANGE_RATE_API_BASE_URL;
 const EXCHANGE_RATE_API_KEY = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
@@ -32,6 +40,11 @@ const CurrencyConverter = () => {
 
     axios.get<ExchangeRateResponse>(EXCHANGE_RATE_API_URL)
       .then((response) => {
+        if (response.data.result !== "success") {
+          setError("Erro ao obter dados da API");
+          return;
+        }
+
         setRates(response.data.conversion_rates);
       }).catch((error) => {
         console.log("Erro ao obter dados da API", error);
