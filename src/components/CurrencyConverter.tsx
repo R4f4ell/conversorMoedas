@@ -23,14 +23,32 @@ const EXCHANGE_RATE_API_BASE_URL = import.meta.env.VITE_EXCHANGE_RATE_API_BASE_U
 const EXCHANGE_RATE_API_KEY = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
 const EXCHANGE_RATE_BASE_CURRENCY = import.meta.env.VITE_EXCHANGE_RATE_BASE_CURRENCY ?? "USD";
 const EXCHANGE_RATE_API_URL = `${EXCHANGE_RATE_API_BASE_URL}/${EXCHANGE_RATE_API_KEY}/latest/${EXCHANGE_RATE_BASE_CURRENCY}`;
+const INVALID_AMOUNT_KEYS = ["e", "E", "+", "-"];
+const VALID_AMOUNT_PATTERN = /^\d*([.,]\d*)?$/;
+
+const getNumericAmount = (value: string) => {
+  const normalizedValue = value.replace(",", ".");
+
+  if (!normalizedValue || normalizedValue === ".") {
+    return null;
+  }
+
+  const numericValue = Number(normalizedValue.endsWith(".")
+    ? normalizedValue.slice(0, -1)
+    : normalizedValue);
+
+  return Number.isFinite(numericValue) ? numericValue : null;
+};
 
 const CurrencyConverter = () => {
   const [rates, setRates] = useState<ConversionRates | null>(null);
   const [fromCurrency, setFromCurrency] = useState("USD");
   const [toCurrency, setToCurrency] = useState("EUR");
-  const [amount, setAmount] = useState<number | "">(1);
+  const [amount, setAmount] = useState("1");
   const [convertedAmount, setConvertedAmount] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const numericAmount = getNumericAmount(amount);
+  const isAmountEmpty = amount === "";
 
   useEffect(() => {
     if (!EXCHANGE_RATE_API_BASE_URL || !EXCHANGE_RATE_API_KEY) {
@@ -53,7 +71,7 @@ const CurrencyConverter = () => {
   }, []);
 
   useEffect(() => {
-    if (amount === "") {
+    if (numericAmount === null) {
       setConvertedAmount(null);
       return;
     }
@@ -67,7 +85,7 @@ const CurrencyConverter = () => {
         return;
       }
 
-      setConvertedAmount(((Number(amount) / rateFrom) * rateTo).toFixed(2));
+      setConvertedAmount(((numericAmount / rateFrom) * rateTo).toFixed(2));
     }
   }, [amount, rates, fromCurrency, toCurrency]);
 
@@ -107,9 +125,28 @@ const CurrencyConverter = () => {
       <div className="converter">
         <h2>Conversor de Moedas</h2>
         <input
-          type="number"
+          type="text"
+          inputMode="decimal"
           value={amount}
-          onChange={(e) => setAmount(e.target.value === "" ? "" : Number(e.target.value))}
+          onKeyDown={(e) => {
+            if (INVALID_AMOUNT_KEYS.includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
+          onChange={(e) => {
+            const inputValue = e.target.value;
+
+            if (inputValue === "") {
+              setAmount("");
+              return;
+            }
+
+            if (!VALID_AMOUNT_PATTERN.test(inputValue)) {
+              return;
+            }
+
+            setAmount(inputValue);
+          }}
         />
         <span>Selecione as moedas:</span>
         <select
@@ -133,12 +170,18 @@ const CurrencyConverter = () => {
             </option>
           ))}
         </select>
-        <h3>
-          {convertedAmount ?? "--"} {toCurrency}
-        </h3>
-        <p>
-          {amount || "--"} {fromCurrency} valem {convertedAmount ?? "--"} {toCurrency}
-        </p>
+        {isAmountEmpty ? (
+          <h3>Informe um valor</h3>
+        ) : (
+          <>
+            <h3>
+              {convertedAmount ?? "--"} {toCurrency}
+            </h3>
+            <p>
+              {numericAmount ?? "--"} {fromCurrency} valem {convertedAmount ?? "--"} {toCurrency}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
