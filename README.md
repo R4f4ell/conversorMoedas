@@ -1,13 +1,6 @@
 # Conversor de Moedas
 
-Aplicacao para conversao de moedas
-
-## Funcionalidade
-
-- Busca cotacoes atualizadas na ExchangeRate API.
-- Permite selecionar moeda de origem e moeda de destino.
-- Calcula o valor convertido automaticamente.
-- Usa imagens responsivas para mobile, tablet e desktop.
+Aplicacao para conversao de moedas usando React, TypeScript e Vite. Uso da api no ExchangeRate API para busca de cotacoes atualizadas exibindo nome das moedas e calculando o valor convertido automaticamente .
 
 ## Tecnologias
 
@@ -17,19 +10,28 @@ Aplicacao para conversao de moedas
 - SCSS
 - Axios
 
+## Variaveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto:
+
+```env
+VITE_EXCHANGE_RATE_API_BASE_URL=https://v6.exchangerate-api.com/v6
+VITE_EXCHANGE_RATE_API_KEY=chave_da_api
+VITE_EXCHANGE_RATE_BASE_CURRENCY=USD
+```
+
 ## Estrutura do projeto
 
 ```txt
 conversorMoedas/
-├─ public/
-├─ src/
-│  ├─ assets/
-│  │  └─ currencyConverter/
-│  │     ├─ desktop/
-│  │     ├─ mobile/
-│  │     └─ tablet/
-│  ├─ components/
-│  ├─ styles/
+|-- public/
+|-- src/
+|   |-- components/
+|   |-- styles/
+|   `-- utils/
+|-- .env.example
+|-- package.json
+`-- vite.config.js
 ```
 
 ## Como rodar
