@@ -22,17 +22,61 @@ type CurrencySelectProps = {
   currencies: string[];
   isOpen: boolean;
   value: string;
-  onBlur: (event: FocusEvent<HTMLDivElement>) => void;
-  onChange: (value: string) => void;
-  onToggle: () => void;
+  onBlur(event: FocusEvent<HTMLDivElement>): void;
+  onChange(value: string): void;
+  onToggle(): void;
+};
+
+type CachedExchangeRates = {
+  createdAt: number;
+  rates: ConversionRates;
 };
 
 const EXCHANGE_RATE_API_BASE_URL = import.meta.env.VITE_EXCHANGE_RATE_API_BASE_URL;
 const EXCHANGE_RATE_API_KEY = import.meta.env.VITE_EXCHANGE_RATE_API_KEY;
 const EXCHANGE_RATE_BASE_CURRENCY = import.meta.env.VITE_EXCHANGE_RATE_BASE_CURRENCY ?? "USD";
 const EXCHANGE_RATE_API_URL = `${EXCHANGE_RATE_API_BASE_URL}/${EXCHANGE_RATE_API_KEY}/latest/${EXCHANGE_RATE_BASE_CURRENCY}`;
+const EXCHANGE_RATE_CACHE_KEY = `exchange-rates:${EXCHANGE_RATE_BASE_CURRENCY}`;
+const EXCHANGE_RATE_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const INVALID_AMOUNT_KEYS = ["e", "E", "+", "-"];
 const VALID_AMOUNT_PATTERN = /^\d*([.,]\d*)?$/;
+
+const exchangeRateErrorMessages: Record<string, string> = {
+  "inactive-account": "Conta da API de cambio inativa",
+  "invalid-key": "Chave da API de cambio invalida",
+  "malformed-request": "Requisicao invalida para a API de cambio",
+  "quota-reached": "Limite mensal da API de cambio atingido",
+  "unsupported-code": "Moeda base nao suportada pela API de cambio",
+};
+
+const getExchangeRateErrorMessage = (errorType: string) => {
+  return exchangeRateErrorMessages[errorType] ?? "Erro ao obter dados da API";
+};
+
+const getCachedRates = () => {
+  const cachedData = localStorage.getItem(EXCHANGE_RATE_CACHE_KEY);
+
+  if (!cachedData) {
+    return null;
+  }
+
+  try {
+    const parsedCache = JSON.parse(cachedData) as CachedExchangeRates;
+    const isCacheValid = Date.now() - parsedCache.createdAt < EXCHANGE_RATE_CACHE_TTL_MS;
+
+    return isCacheValid ? parsedCache.rates : null;
+  } catch {
+    localStorage.removeItem(EXCHANGE_RATE_CACHE_KEY);
+    return null;
+  }
+};
+
+const setCachedRates = (rates: ConversionRates) => {
+  localStorage.setItem(EXCHANGE_RATE_CACHE_KEY, JSON.stringify({
+    createdAt: Date.now(),
+    rates,
+  }));
+};
 
 const getNumericAmount = (value: string) => {
   const normalizedValue = value.replace(",", ".");
@@ -105,16 +149,28 @@ const CurrencyConverter = () => {
       return;
     }
 
+    const cachedRates = getCachedRates();
+
+    if (cachedRates) {
+      setRates(cachedRates);
+      return;
+    }
+
     axios.get<ExchangeRateResponse>(EXCHANGE_RATE_API_URL)
       .then((response) => {
         if (response.data.result !== "success") {
-          setError("Erro ao obter dados da API");
+          setError(getExchangeRateErrorMessage(response.data["error-type"]));
           return;
         }
 
+        setCachedRates(response.data.conversion_rates);
         setRates(response.data.conversion_rates);
       }).catch((error) => {
-        console.log("Erro ao obter dados da API", error);
+        if (axios.isAxiosError(error) && error.response?.status === 429) {
+          setError("Muitas requisicoes para a API de cambio");
+          return;
+        }
+
         setError("Erro ao obter dados da API");
       });
   }, []);
